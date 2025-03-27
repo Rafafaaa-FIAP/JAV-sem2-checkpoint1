@@ -1,5 +1,8 @@
 package br.com.restaurante.model;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Pedido {
@@ -16,10 +19,22 @@ public class Pedido {
 		this.bebidas = bebidas;
 	}
 	
-	public void fazerPedido() {
-
+	public void fazerPedido() throws SQLException {
+		Connection conn = null;
+		PreparedStatement preparedStatement = null;
 		
-		
+		try {
+			conn = new Conexao().retornarConexao();
+			
+			
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			preparedStatement.close();
+			conn.close();
+		}
 	}
 	
 	

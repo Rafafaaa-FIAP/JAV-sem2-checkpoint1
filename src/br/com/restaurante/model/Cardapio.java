@@ -1,5 +1,9 @@
 package br.com.restaurante.model;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,40 +13,89 @@ public class Cardapio {
 	private Map<Integer, Bebida> bebidas;
 
 
-	public Cardapio() {
+	public Cardapio() throws SQLException {
 		this.pratos = carregarPratos();
 		this.bebidas = carregarBebidas();
 	}
 	
-	private Map<Integer, Prato> carregarPratos() {
+	private Map<Integer, Prato> carregarPratos() throws SQLException {
 		Map<Integer, Prato> pratos = new HashMap<>();
 		
-		Prato prato1 = new Prato(1, "Baião de Dois", "Arroz, feijão fradinho, linguiça calabresa", 50.f);
-		pratos.put(prato1.getCodigo(), prato1);
+		Connection conn = null;
+		PreparedStatement preparedStatement = null;
 		
-		Prato prato2 = new Prato(2, "Da casa", "Carne moída com batata", 40.f);
-		pratos.put(prato2.getCodigo(), prato2);
-		
-		Prato prato3 = new Prato(3, "Parmegiana de Carne", "Filé Mignon, arroz, fritas", 40.f);
-		pratos.put(prato3.getCodigo(), prato3);
+		try {
+			conn = new Conexao().retornarConexao();
+			
+			preparedStatement = conn.prepareStatement("SELECT * FROM PRATO");
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				int codigo = resultSet.getInt("COD_PRATO");
+				String nome = resultSet.getString("NOME");
+				String descricao = resultSet.getString("DESCRICAO");
+				float preco = resultSet.getFloat("VALOR");
+
+				Prato prato = new Prato(codigo, nome, descricao, preco);
+				pratos.put(prato.getCodigo(), prato);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			preparedStatement.close();
+			conn.close();
+		}
 		
 		return pratos;
 	}
 	
-	private Map<Integer, Bebida> carregarBebidas() {
+	private Map<Integer, Bebida> carregarBebidas() throws SQLException {
 		Map<Integer, Bebida> bebidas = new HashMap<>();
 		
-		Bebida bebida1 = new Bebida(1, "Refrigerante", "Coca-Cola, Fanta, Guaraná", 8f);
-		bebidas.put(bebida1.getCodigo(), bebida1);
+		Connection conn = null;
+		PreparedStatement preparedStatement = null;
 		
-		Bebida bebida2 = new Bebida(2, "Cerveja", "Corona, Skol, Original", 12f);
-		bebidas.put(bebida2.getCodigo(), bebida2);
-		
-		Bebida bebida3 = new Bebida(3, "Suco", "Laranja, Limão, Melancia, Melão", 12f);
-		bebidas.put(bebida3.getCodigo(), bebida3);
+		try {
+			conn = new Conexao().retornarConexao();
+			
+			preparedStatement = conn.prepareStatement("SELECT * FROM BEBIDA");
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				int codigo = resultSet.getInt("COD_BEBIDA");
+				String nome = resultSet.getString("NOME");
+				String descricao = resultSet.getString("DESCRICAO");
+				float preco = resultSet.getFloat("VALOR");
+
+				Bebida bebida = new Bebida(codigo, nome, descricao, preco);
+				bebidas.put(bebida.getCodigo(), bebida);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			preparedStatement.close();
+			conn.close();
+		}
 		
 		return bebidas;
 	}
+
+	public void listarPratosBebidas() {
+		System.out.println("###### CARDÁPIO ######");
+		
+		System.out.println("### PRATOS ###");
+		for (Prato prato : this.pratos.values()) {
+			prato.exibirPrato();
+		}
+		
+		System.out.println("### BEBIDAS ###");
+		for (Bebida bebida : this.bebidas.values()) {
+			bebida.exibirBebida();
+		}
+	}
+	
 	
 	
 	public Map<Integer, Prato> getPratos() {

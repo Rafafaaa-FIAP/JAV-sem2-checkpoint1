@@ -6,5 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/crist/Desktop/FIAP/1 - JAV/JAV-sem2-checkpoint1/jars/ojdbc17.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

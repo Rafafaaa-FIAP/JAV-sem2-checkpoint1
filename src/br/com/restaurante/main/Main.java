@@ -1,5 +1,6 @@
 package br.com.restaurante.main;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,29 +13,17 @@ import br.com.restaurante.model.Prato;
 
 public class Main {
 
-	public static void main(String[] args) throws OpcaoInvalidoException {
+	public static void main(String[] args) throws OpcaoInvalidoException, SQLException {
 
 		System.out.println("Bem-Vindo ao Delivery do nosso Restaurante");
 		
 		Cardapio cardapio = new Cardapio();
 		
-		
-	}
-	
-	public void listarPratosBebidas(Cardapio cardapio) {
-		System.out.println("###### CARDÁPIO ######");
-		
-		for (Prato prato : cardapio.getPratos().values()) {
-			prato.exibirPrato();
-		}
-		
-		for (Bebida bebida : cardapio.getBebidas().values()) {
-			bebida.exibirBebida();
-		}
+		cardapio.listarPratosBebidas();
 	}
 
-	public void criarPedido(Cardapio cardapio) {
-		listarPratosBebidas(cardapio);
+	public void criarPedido(Cardapio cardapio) throws SQLException {
+		cardapio.listarPratosBebidas();
 		
 		Scanner input = new Scanner(System.in);
 
