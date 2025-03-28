@@ -18,30 +18,38 @@ public class Main {
 		System.out.println("Bem-Vindo ao Delivery do nosso Restaurante");
 		
 		Cardapio cardapio = new Cardapio();
-		
-		cardapio.listarPratosBebidas();
+
+		Pedido pedido = criarPedido(cardapio);
+
+		verificarStatus(1, pedido);
+
+
+
 	}
 
-	public void criarPedido(Cardapio cardapio) throws SQLException {
+	public static  Pedido criarPedido(Cardapio cardapio) throws SQLException {
 		cardapio.listarPratosBebidas();
 		
 		Scanner input = new Scanner(System.in);
 
 		System.out.println("Selecione os pratos que deseja (digite 0 para finalizar): ");
+		int codigoSelecionado = -1;
 		
 		List<Prato> pratos = new ArrayList<Prato>();
-		
-		int codigoSelecionado = -1;
+
 		while (codigoSelecionado != 0) {
 			codigoSelecionado = input.nextInt();
-			
-			Prato prato = cardapio.getPratos().get(codigoSelecionado);
-			if (prato == null) {
-				throw new OpcaoInvalidoException("Prato inválido!");
+
+			if(codigoSelecionado != 0) {
+				Prato prato = cardapio.getPratos().get(codigoSelecionado);
+				if (prato == null) {
+					throw new OpcaoInvalidoException("Prato inválido!");
+				}
+				else {
+					pratos.add(prato);
+				}
 			}
-			else {
-				pratos.add(prato);
-			}
+
 		}
 
 		System.out.println("Selecione as bebidas que deseja (digite 0 para finalizar): ");
@@ -51,14 +59,17 @@ public class Main {
 		codigoSelecionado = -1;
 		while (codigoSelecionado != 0) {
 			codigoSelecionado = input.nextInt();
-			
-			Bebida bebida = cardapio.getBebidas().get(codigoSelecionado);
-			if (bebida == null) {
-				throw new OpcaoInvalidoException("Opção inválida!");
+
+			if(codigoSelecionado != 0) {
+				Bebida bebida = cardapio.getBebidas().get(codigoSelecionado);
+				if (bebida == null) {
+					throw new OpcaoInvalidoException("Opção inválida!");
+				}
+				else {
+					bebidas.add(bebida);
+				}
 			}
-			else {
-				bebidas.add(bebida);
-			}
+
 		}
 
 		System.out.println("Digite o endereço de entrega: ");
@@ -66,9 +77,16 @@ public class Main {
 		
 		Pedido pedido = new Pedido(endereco, pratos, bebidas);
 		pedido.fazerPedido();
+
+		return pedido;
 	}
 	
-	public void verificarStatus() {
-		
+	public static void verificarStatus(Integer idPedido, Pedido pedido) throws SQLException {
+		System.out.println("Digite o id do pedido: ");
+
+		Scanner input = new Scanner(System.in);
+		idPedido = input.nextInt();
+
+		pedido.verificarStatus(idPedido);
 	}
 }
